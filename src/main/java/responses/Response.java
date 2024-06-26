@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.Data;
+
 public class Response<T>  {
 
     private boolean success;
@@ -34,14 +36,12 @@ public class Response<T>  {
         return error;
     }
 
+    @Data
     public static class Error {
         private String code;
-        private final List<ErrorDetail> errors = new ArrayList<>();
+        private ErrorDetail errors;
 
-        public String getCode() {
-            return code;
-        }
-
+      
         public Optional<String> getDescription() {
             if(Optional.ofNullable(code).isPresent()) {
                 return Optional.of(DsmUtils.manageErrorMessage(Integer.valueOf(code)));
@@ -49,37 +49,12 @@ public class Response<T>  {
            return Optional.empty();
         }
 
-        public List<ErrorDetail> getErrors() {
-            return errors;
-        }
 
+        @Data
         public static class ErrorDetail {
-            String code;
-            String path;
+            String line;
+            String message;
 
-            public String getCode() {
-                return code;
-            }
-
-            public String getPath() {
-                return path;
-            }
-
-            @Override
-            public String toString() {
-                return "ErrorDetail{" +
-                        "code='" + code + '\'' +
-                        ", path='" + path + '\'' +
-                        '}';
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "Error{" +
-                    "code='" + code + '\'' +
-                    ", errors=" + errors +
-                    '}';
         }
 
     }
